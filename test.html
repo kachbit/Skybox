@@ -2,17 +2,17 @@
 <html>
     <body>
         <video id="target" controls=false muted autoplay disablepictureinpicture></video>
-        <button id="btn">Request PiP</button>
-        <canvas id="canvas" style="position: fixed; top: 0; left: 0;"></canvas>
+        <button id="btn">request PiP</button>
+        <canvas id="canvas"></canvas>
         <script>
             const target = document.getElementById('target');
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
+            const source = document.createElement('canvas');
+            const ctx = source.getContext('2d');
             const dpi = window.devicePixelRatio || 1;
             const scale = 2; // Adjust as needed
 
-            canvas.width = 300 * dpi;
-            canvas.height = 20 * dpi;
+            source.width = 300 * dpi;
+            source.height = 20 * dpi;
 
             ctx.font = `${15 * dpi}px Arial`;
             ctx.fillStyle = "white"; // Set text color to white
@@ -22,14 +22,14 @@
 
             function updateCanvas() {
                 const formattedTime = new Date().toLocaleTimeString('en-US', { timeStyle: 'medium' });
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillText(formattedTime, 10 * dpi, canvas.height / 2);
+                ctx.clearRect(0, 0, source.width, source.height);
+                ctx.fillText(formattedTime, 10 * dpi, source.height / 2);
                 requestAnimationFrame(updateCanvas);
             }
 
             updateCanvas();
 
-            const stream = canvas.captureStream();
+            const stream = source.captureStream();
             target.srcObject = stream;
 
             // Attempt to request Picture in Picture immediately on load
