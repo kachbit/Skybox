@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       body {
-        text-align: center; /* Center all body elements horizontally */
+        text-align: center; /* Center all body elements horizontally */ 
       }
 
       #container {
@@ -41,9 +41,9 @@
     </style>
   </head>
   <body>
-    <div id="container">
-      <div class="video-container">
-        <div class="capa" onclick="target.style.width === '0px' ? target.style.width = '' : target.style.width = '0px' ">video pip src. click here if not working:</div><br>
+    <div id="container" style="">
+      <div class="video-container" style="">
+        <div class="capa" onclick="target.style.width === '0px' ? target.style.width = '' : target.style.width = '0px' ">video pip src. click below if not working:</div><br>
         <video
           id="target"
           style="background: black;border-radius:15px;border: 5px dotted green;max-width: 100%;"
@@ -60,8 +60,8 @@
 
       <!-- First Canvas -->
 
-      <div class="canvas-container">
-        <div class="capa" onclick="destinationCanvas.style.visibility === 'hidden' ? destinationCanvas.style.visibility = 'visible' : destinationCanvas.style.visibility = 'hidden'">Canvas mimicker node. live previewer:</div><br>
+      <div class="canvas-container" >
+        <div class="capa" onclick="destinationCanvas.style.visibility === 'hidden' ? destinationCanvas.style.visibility = 'visible' : destinationCanvas.style.visibility = 'hidden'">preview:</div><br>
         <canvas
           id="destinationCanvas"
           style="background-color: black; border-radius: 15px;border: 5px dotted gray;max-width: 100%;"
@@ -69,18 +69,30 @@
       </div>
     </div>
     <br />
-    <button id="btn" onclick="initiatePiP()">Request PiP</button>
- <div/><br>layer 1
-    <div id="options" style="margin-top: 20px;">
+    <button id="btn" onclick="initiatePiP()">APPLY</button>
+    <div/><br>layer 1
+    <div id="options" style="margin-top: 20px;padding:20px;border:5px solid slategray;border-radius: 10px;width:fit-content;  position: relative;
+      left: 50%;
+      transform: translateX(-50%);">
       <label><input type="checkbox" id="timeCheckbox" checked> Time</label>
       <label><input type="checkbox" id="dateCheckbox" checked> Date</label>
-      <label><input type="checkbox" id="weatherCheckbox"> Current Weather</label>
-      <label><input type="checkbox" id="stopwatchCheckbox"> Stopwatch</label>
+      <label><input type="checkbox" id="weatherCheckbox"> Current Weather (enter zip ↓)</label>
+      <label><input type="checkbox" id="stopwatchCheckbox" checked> Custom text (modify ↓)</label><br>
+        <label>Zip Code: <input type="text" id="zipCodeInput"></label>
+        <button onclick="fetchWeather()">Apply</button>
+        <div id="weatherOutput"></div>
+
+      <label>Custom text: <input type="text" id="customtxt1" value="ⓀⒶⒸⒽⒺⓇ"></label>
+      <!-- <button onclick="customtxt()">Apply</button> -->
     </div><br>
     layer 2:
-    <div id="options" style="margin-top: 20px;">
-      <label><input type="checkbox" id="rssCheckbox">RSS news feed ticker</label>
+    <div id="options" style="margin-top: 20px;padding:20px;border:5px solid slategray;border-radius: 10px;width:fit-content;  position: relative;
+      left: 50%;
+      transform: translateX(-50%);">
+      <label><input type="checkbox" id="rssCheckbox">Live news feed</label>
     </div>
+ 
+      </div>
 
     <script>
       const target = document.getElementById("target");
@@ -97,10 +109,10 @@
       let titleGap = 2; // Initial gap between titles
 
       canvas.width = 300 * dpi;
-      canvas.height = 60 * dpi;
+      canvas.height = 20 * dpi;
 
       destinationCanvas.width = 300 * dpi;
-      destinationCanvas.height = 60 * dpi;
+      destinationCanvas.height = 20 * dpi;
 
       const ctx = canvas.getContext("2d");
       const destCtx = destinationCanvas.getContext("2d");
@@ -111,7 +123,26 @@
       ctx.textBaseline = "middle";
       ctx.imageSmoothingEnabled = true;
 
+
+
+      // var xPos = 10 * dpi;
+
+      //    //    if (displayStopwatch && customtxt1.value) {
+      //          console.log("2")
+      //          ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //          // Add stopwatch implementation here
+      //          // For now, let's assume the stopwatch is 00:00
+      //          const stopwatchText = "aaaaaaaaa"; //customtxt1.value
+      //          ctx.fillText(stopwatchText, xPos, canvas.height / 2);
+      //          xPos += ctx.measureText(stopwatchText).width + 10 * dpi;
+      //          destCtx.drawImage(canvas, 0, 0); // Mimic the first canvas
+
+      //            updateCanvas()
+
+
+      
       function updateCanvas() {
+        var xPos = 10 * dpi;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         destCtx.clearRect(
           0,
@@ -120,7 +151,6 @@
           destinationCanvas.height
         );
 
-        let xPos = 10 * dpi;
 
         if (displayTime) {
           const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -139,20 +169,19 @@
         }
 
         if (displayWeather) {
-          // Add weather implementation here
-          // For now, let's assume the weather is 25 degrees
-          const weatherText = "25°C";
+          // Display weather if enabled
+          const weatherText = document.getElementById("weatherOutput").innerHTML;
           ctx.fillText(weatherText, xPos, canvas.height / 2);
           xPos += ctx.measureText(weatherText).width + 10 * dpi;
           destCtx.drawImage(canvas, 0, 0); // Mimic the first canvas
         }
 
+//
         if (displayStopwatch) {
-          // Add stopwatch implementation here
-          // For now, let's assume the stopwatch is 00:00
-          const stopwatchText = "00:00";
-          ctx.fillText(stopwatchText, xPos, canvas.height / 2);
-          xPos += ctx.measureText(stopwatchText).width + 10 * dpi;
+          // Display weather if enabled
+          var a = customtxt1.value;
+          ctx.fillText(a, xPos, canvas.height / 2);
+          xPos += ctx.measureText(a).width + 10 * dpi;
           destCtx.drawImage(canvas, 0, 0); // Mimic the first canvas
         }
 
@@ -171,6 +200,8 @@
 
       updateCanvas();
 
+
+
       const stream = canvas.captureStream();
       target.srcObject = stream;
 
@@ -188,17 +219,20 @@
         displayWeather = document.getElementById("weatherCheckbox").checked;
         displayStopwatch = document.getElementById("stopwatchCheckbox").checked;
         if(document.getElementById("rssCheckbox").checked) {
-          init();
+          init("initPip");
         }
       }
 
       function resizePiP() {
-        const width = document.querySelector('#text1').value;
-        const height = document.querySelector('#text2').value;
-        canvas.width = width * dpi;
-        canvas.height = height * dpi;
-        destinationCanvas.width = width * dpi;
-        destinationCanvas.height = height * dpi;
+        console.log("x")
+        var padding = document.querySelector('#text1').value;
+     //   const height = document.querySelector('#text2').value;
+          padding = (parseInt(padding)+10).toString();
+        console.log(padding)
+        canvas.height = padding * dpi;
+    //    canvas.height = padding * dpi;
+        destinationCanvas.height = padding * dpi;
+     //   destinationCanvas.height = height * dpi;
         ctx.font = `${15 * dpi}px Arial`;
         ctx.fillStyle = "white"; // Set text color to white
         ctx.textAlign = "left";
@@ -206,18 +240,59 @@
         ctx.imageSmoothingEnabled = true;
       }
 
+      // Fetch Weather Function
+      function fetchWeather() {
+        const zipCode = document.getElementById("zipCodeInput").value;
+        const weatherOutput = document.getElementById("weatherOutput");
+
+        if (zipCode) {
+          // Fetch weather using the provided API
+          fetch(`https://wttr.in/${zipCode}?format=%c%t`)
+            .then(response => response.text())
+            .then(data => {
+              weatherOutput.innerHTML = data;
+            })
+            .catch(error => {
+              console.error('Error fetching weather:', error);
+              weatherOutput.innerHTML = 'Error fetching weather';
+            });
+        } else {
+          weatherOutput.innerHTML = 'invalid zip code';
+        }
+        btn.click()
+      }
+      // Periodically update weather every 5 minutes
+      setInterval(fetchWeather, 300000);
+
       // RSS Feed Ticker
-      function init() {
+      function init(src) {
+        console.log("SOURCE:: "+src)
+        var padding = document.querySelector('#text1').value;
+        if(parseInt(padding) < 50) {
+          document.querySelector('#text1').value = 50;
+          canvas.height = 50 * dpi;
+          destinationCanvas.height = 50 * dpi;
+
+          ctx.font = `${15 * dpi}px Arial`;
+          ctx.fillStyle = "white"; // Set text color to white
+          ctx.textAlign = "left";
+          ctx.textBaseline = "middle";
+          ctx.imageSmoothingEnabled = true;
+        }
+
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             var resp = JSON.parse(this.responseText);
             generateTicker(resp);
+          } else {
+            console.log(`Error fetching. ${this.readyState}, ${this.status}`);;
           }
         };
         xhttp.open("GET", "https://api.reddit.com/r/news", true);
         xhttp.send();
       }
+
       function shuffle(array) {
         let currentIndex = array.length,  randomIndex;
 
@@ -235,7 +310,9 @@
 
         return array;
       }
+
       function generateTicker(resp) {
+        console.log("a")
         if (resp === null || resp === undefined) return;
         var items = resp.data.children;
         var index = 0;
@@ -259,10 +336,9 @@
       }
 
       // Initialize RSS Feed Ticker
-
+init("load")
     </script><br>
-    width: <input id="text1"><br>
-    height: <input id="text2"><br>
+    padding: <input type="range" id="text1" min="0" max="200" value="10"><br>
     <button onclick="resizePiP()">Resize</button><br>
   </body>
 </html>
